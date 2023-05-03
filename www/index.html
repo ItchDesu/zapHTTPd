@@ -1,0 +1,528 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+	<title>Welcome to zapHTTPd</title>
+	<meta charset="utf-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1">
+	<meta name="theme-color" content="#fff">
+    <style>
+        body,
+        html {
+            margin: 0;
+            padding: 0;
+            width: 100%;
+            height: 100%;
+            font-size: 16px;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, '.SFNSText-Regular', 'Helvetica Neue', 'Arial', sans-serif;
+        }
+        * {
+            -webkit-box-sizing: border-box;
+            -moz-box-sizing: border-box;
+            box-sizing: border-box;
+        }
+
+        /* firefox < 4, safari < 5.1, ie < 11 doesn't support hidden attribute */
+
+        [hidden] {
+            display: none;
+        }
+
+        /* colors */
+
+        .blue-gradient-background {
+            background: linear-gradient(135deg, rgba(80, 122, 196, 1) 43%, rgba(128, 192, 226, 1) 89%);
+            /* fallback for old browsers that don't support gradients */
+            background-color: rgb(80, 122, 196);
+        }
+        .inherit-color {
+            color: inherit;
+        }
+        .fade {
+            opacity: 0.333;
+        }
+        .light-gray-background {
+            background-color: #f7f7f7;
+        }
+        .color-white {
+            color: white;
+        }
+
+        /* centering */
+
+        .centered {
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            -webkit-transform: translateX(-50%) translateY(-50%);
+            -moz-transform: translateX(-50%) translateY(-50%);
+            -ms-transform: translateX(-50%) translateY(-50%);
+            transform: translateX(-50%) translateY(-50%);
+        }
+        .horizontally-centered {
+            display: block;
+            text-align: center;
+            margin: auto;
+        }
+        .oneline {
+            white-space: nowrap;
+        }
+
+        /* links */
+
+        a {
+            color: #ffffff;
+            font-weight: bold;
+            text-decoration: none;
+        }
+
+        /* headings */
+
+        .title-heading,
+        .title-subheading {
+            font-size: 5em;
+            font-weight: 300;
+            opacity: 0.8;
+            margin: 0.5em 0;
+            color: #fff;
+            text-align: center;
+        }
+        .title-subheading {
+            font-size: 2em;
+        }
+        .title-heading + .title-subheading {
+            margin-top: -1em;
+        }
+        .center-heading {
+            text-align: center;
+        }
+
+        .header-container {
+            padding-left: 1em;
+            overflow: auto;
+        }
+
+        .logo-image {
+            display: inline-block;
+            width: 1em;
+            height: 1em;
+            vertical-align: baseline;
+            margin-bottom: -0.1em;
+            margin-right: 0.25em;
+        }
+
+        .logo-image-floating {
+            margin-top: 0.1em;
+            margin-right: 0.5em;
+        }
+
+        h1 {
+            font-size: 2.25em;
+            font-weight: 400;
+            margin: 0.5em 0;
+            opacity: 0.8;
+        }
+        h2 {
+            font-size: 1.75em;
+            font-weight: 400;
+            opacity: 0.8;
+            margin: 0.75em 0 0.5em 0;
+        }
+
+        @media all and (max-width: 600px) {
+            h1 {
+                font-size: 1.75em;
+            }
+            h2 {
+                font-size: 1.5em;
+            }
+        }
+
+
+        /* buttons */
+
+        .button {
+            -webkit-appearance: none;
+            appearance: none;
+            background: none;
+            border-width: 1px;
+            border-style: solid;
+            color: inherit;
+            font-size: 1em;
+            padding: 1em 1.5em;
+            transition: 0.1s;
+            min-width: 40%;
+            cursor: pointer;
+        }
+        .outlined-button {
+            border-color: currentColor;
+        }
+        .outlined-button:not(.disabled):not(.outlined-button-white):hover {
+            background: #fff;
+            border-color: #fff;
+            color: #000;
+        }
+        .outlined-button-white:hover {
+            background: #eee;
+        }
+        .solid-button {
+            background: #fff;
+            border-color: #fff;
+            color: #000;
+        }
+        .solid-button.solid-button-blue {
+            background: rgb(78, 123, 196);
+            border-color: rgb(78, 123, 196);
+            color: #fff;
+            outline: none;
+        }
+
+        .solid-button.solid-button-blue:hover {
+            background: rgb(70, 110, 175);
+            border-color: rgb(70, 110, 175);
+        }
+        button .button-subtext {
+            display: block;
+            font-size: 0.8em;
+            text-align: center;
+            overflow: hidden;
+            height: 0;
+        }
+        button.disabled .button-subtext {
+            height: auto;
+            padding-top: 0.2em;
+        }
+        .primary-action-button {
+            width: 80%;
+            margin-left: 10%;
+            margin-top: 1.5em;
+        }
+        button.disabled {
+            opacity: 0.5;
+        }
+
+        /* cards */
+
+        .inline-block-wrapper {
+            font-size: 0;
+        }
+        .inline-block-wrapper > * {
+            font-size: 1rem;
+        }
+        .section {
+            display: block;
+            white-space: nowrap;
+            padding: 1em 5% 2em 5%;
+            position: relative;
+        }
+        .section.half-width {
+            width: 50%;
+            display: inline-block;
+        }
+        .section.one-column .column {
+            width: 100%;
+        }
+        .section .column {
+            display: inline-block;
+            width: 50%;
+            vertical-align: top;
+            white-space: normal;
+            padding: 0 1.5em;
+            font-size: 1.2em;
+        }
+        .section img.column {
+            padding-left: 0;
+            padding-right: 0;
+        }
+
+        /* dialogs */
+
+        .backdrop {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0, 0, 0, 0.75);
+        }
+        .dialog {
+            position: fixed;
+            background: #fff;
+            padding: 1.25em 3em 2.5em 3em;
+            overflow: auto;
+            width: 60%;
+            max-width: 600px;
+        }
+        .dialog h1,
+        .dialog h2 {
+            font-weight: normal;
+        }
+        ul {
+            line-height: 1.33em;
+        }
+
+        /* hero */
+
+        .hero {
+            height: 85%;
+            width: 100%;
+            position: relative;
+            overflow: hidden;
+        }
+        .background-block {
+            width: 100%;
+            height: 100%;
+            position: absolute;
+            top: 0;
+            left: 0;
+        }
+
+
+        /* smaller layout */
+
+        @media all and (max-width: 1000px) {
+            .section {
+                padding: 1em 2.5% 2em 2.5%;
+            }
+        }
+
+        @media all and (max-width: 675px) {
+            body,
+            html {
+                font-size: 14px !important;
+            }
+            .title-heading {
+                font-size: 4.5em;
+            }
+            .section {
+                white-space: normal !important;
+            }
+            .arrow-spacer, i.arrow-showmore-icon {
+                display: none;
+            }
+            .section,
+            .column,
+            .section.half-width {
+                min-width: 100%;
+            }
+            .hero .centered {
+                width: 90%;
+            }
+            .dialog {
+                width: 100%;
+            }
+        }
+        .hero {
+            height: 100% !important;
+        }
+        .section .column > h1 {
+            font-size: 2.5rem;
+        }
+
+        .bottom-pinned-image {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            max-width: 100%;
+            transition: 0.1s opacity;
+        }
+
+        i {
+            font-size: 1.25em !important;
+            vertical-align: text-top;
+        }
+
+        /* showmore arrow */
+
+        .arrow-spacer {
+            height: 110px;
+        }
+
+        i.arrow-showmore-icon {
+            display: block;
+            font-size: 2.5em !important;
+            text-align: center;
+            opacity: 0.75;
+            position: absolute;
+            bottom: 125px;
+            width: 33%;
+            text-align: center;
+        }
+
+        @media all and (max-width: 1280px) {
+            .arrow-spacer {
+                height: 70px;
+            }
+            i.arrow-showmore-icon {
+                bottom: 40px;
+            }
+        }
+
+        /* feature grid */
+
+        .feature-grid {
+            display: flex;
+            flex-wrap: wrap;
+        }
+
+        .feature-grid > .feature-card {
+            display: inline-block;
+            vertical-align: top;
+            white-space: normal;
+            padding: 1em 2em;
+            font-size: 1.1em;
+            flex: 1;
+        }
+
+        @media all and (max-width: 1000px) {
+            .feature-grid > .feature-card {
+                padding: 1em;
+            }
+        }
+
+        @media all and (max-width: 650px) {
+            .feature-grid > .feature-card {
+                min-width: 100%;
+                padding-left: 2em;
+                padding-right: 2em;
+            }
+        }
+
+        .feature-grid > .feature-card img {
+            max-width: 100%;
+        }
+
+        #get-involved div {
+            position: relative;
+        }
+        #get-involved .list-icon {
+            position: absolute;
+            left: -2em;
+        }
+    </style>
+</head>
+
+<body>
+
+	<div class="hero">
+		<div class="blue-gradient-background background-block"></div>
+		<div class="centered color-white">
+			<h1 class="title-heading">Welcome to zapHTTPd.</h1>
+			<div class="horizontally-centered oneline">
+				If you see this page, the <a href="https://github.com/atzitiondev/zaphttpd">zapHTTPd</a> web server is successfully working.</p>
+			</div>
+		</div>
+	</div>
+
+	<script>
+        function throttle (fn, threshhold, scope) {
+            threshhold || (threshhold = 250)
+            var last,
+                deferTimer
+            return function () {
+                var context = scope || this
+
+                var now = +new Date,
+                args = arguments
+                if (last && now < last + threshhold) {
+                // hold on to it
+                clearTimeout(deferTimer)
+                deferTimer = setTimeout(function () {
+                    last = now
+                    fn.apply(context, args)
+                }, threshhold)
+                } else {
+                last = now
+                fn.apply(context, args)
+                }
+            }
+            }
+
+            function smoothScrollBy (amt, duration) {
+            var startingScrollTop = window.scrollY
+            var startTime = Date.now()
+
+            function incrementScroll () {
+                var durationPassed = Date.now() - startTime
+                window.scrollTo(0, startingScrollTop + (amt * Math.min(1, (durationPassed / duration))))
+                if (durationPassed < duration) {
+                requestAnimationFrame(incrementScroll)
+                }
+            }
+            incrementScroll()
+            }
+
+            var startButton = document.getElementById('start-tour')
+            var tabImage = document.getElementById('tab-image')
+            var showMoreArrows = document.getElementsByClassName('arrow-showmore-icon')
+            var startBrowsingButtons = document.getElementsByClassName('start-browsing-onclick')
+
+            startButton.addEventListener('click', function (e) {
+            requestAnimationFrame(function () {
+                smoothScrollBy(window.innerHeight * 0.9, 250)
+            })
+            })
+
+            window.addEventListener('scroll', throttle(function (e) {
+            requestAnimationFrame(function () {
+                if (window.scrollY < 20) {
+                tabImage.classList.add('fade')
+                } else {
+                tabImage.classList.remove('fade')
+                }
+            })
+            }, 200))
+
+            for (var i = 0; i < showMoreArrows.length; i++) {
+            showMoreArrows[i].addEventListener('click', function (e) {
+                smoothScrollBy(window.innerHeight * 0.8, 250)
+            })
+            }
+
+            // clicking this button will close the current tour tab, resulting in zero tabs. This will cause a new, empty tab to be created, and edit mode to be opened.
+            for (var i = 0; i < startBrowsingButtons.length; i++) {
+            startBrowsingButtons[i].addEventListener('click', function (e) {
+                window.close()
+            })
+            }
+
+            // show the appropriate key (command or control) for keyboard shortcuts depending on the platform
+
+            if (navigator.platform === 'MacIntel') {
+            var shortcutKey = '⌘'
+            } else {
+            var shortcutKey = 'Ctrl'
+            }
+
+            var shortcutKeyNodes = document.getElementsByClassName('shortcut-key')
+
+            for (var i = 0; i < shortcutKeyNodes.length; i++) {
+            shortcutKeyNodes[i].textContent = shortcutKey
+            }
+
+            // show other platform-specific content
+            // guess a platform for mobile devices (rather than showing nothing), although it's unlikely the tour would be accessed outside of the browser
+
+            var platform
+
+            if (['MacIntel', 'iPod', 'iPhone', 'iPad'].includes(navigator.platform)) {
+            platform = 'mac'
+            } else if (navigator.platform.startsWith('Linux') || navigator.platform.startsWith('FreeBSD')) {
+            // FreeBSD isn't Linux, but we don't separate them for now, and the tour content should be the same for both
+            platform = 'linux'
+            } else {
+            platform = 'windows'
+            }
+
+            [].slice.call(document.querySelectorAll('[data-platform]')).forEach(function (el) {
+            if (el.getAttribute('data-platform').includes(platform)) {
+                el.hidden = false
+            } else {
+                el.hidden = true
+            }
+        })
+    </script>
+</body>
+
+</html>
